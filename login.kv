@@ -1,0 +1,73 @@
+<ClickableTextFieldRound>:
+    size_hint_y: None
+    height: text_field.height
+
+    MDTextField:
+        id: text_field
+        hint_text: root.hint_text
+        password: True
+        icon_left: "key-variant"
+        on_text: root.text = self.text
+
+    MDIconButton:
+        icon: "eye-off"
+        pos_hint: {"center_y": .5}
+        pos: text_field.width - self.width + dp(8), 0
+        theme_text_color: "Hint"
+        on_release:
+            self.icon = "eye" if self.icon == "eye-off" else "eye-off"
+            text_field.password = False if text_field.password is True else True
+
+<Login>:
+
+    MDRelativeLayout:
+
+        MDIconButton:
+            icon: "theme-light-dark"
+            size_hint: None, None
+            pos_hint: {"center_x": 0.97, "bot": 0.99}
+            on_release: app.switch_theme_style()
+
+        Image:
+            source: "logopng2.png"
+            size_hint: None, None
+            size: "100dp", "100dp"
+            pos_hint: {"center_x": 0.5, "top": 0.9}
+
+        MDBoxLayout:
+            orientation: "vertical"
+            spacing: "10dp"
+            size_hint: None, None
+            width: "300dp"
+            height: self.minimum_height #ajusta automaticamente
+            pos_hint: {"center_x": 0.5, "center_y": 0.5}
+
+            MDLabel:
+                text: "Iniciar Sesion"
+                font_style: "H4"
+                halign: "center"
+
+            MDTextField:
+                id: input_username
+                hint_text: "Usuario"
+                icon_left: "account"
+                multiline: False
+
+            ClickableTextFieldRound:
+                id: input_password
+                hint_text: "Contraseña"
+                icon_right: "account"
+                password: True
+                multiline: False
+
+            MDLabel:
+                id: info_label
+                text: ""
+                halign: "center"
+
+        MDRaisedButton:
+            text: "Iniciar Sesion"
+            size_hint: None, None
+            size: "300dp", "50dp"
+            pos_hint: {"center_x": 0.5, "center_y": 0.3}
+            on_release: root.connect()

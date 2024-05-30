@@ -1,0 +1,322 @@
+<DrawerClickableItem@MDNavigationDrawerItem>:
+    text_color: app.theme_cls.text_color
+    icon_color: app.theme_cls.text_color
+
+<BarraTop@MDTopAppBar>:
+    right_action_items: [["bell"]]
+    title: "JOSE ROMERO E HIJOS SRL"
+    elevation: 10
+    pos_hint: {"top": 1}
+
+<ConfigTabs@MDTabs>
+    id: tabs
+    tab_indicator_anim: True
+    tab_indicator_height: "2dp"
+    tab_bar_height: "32dp"
+    text_color_active: 1, 1, 1, 1
+    text_color_normal: 0, 0, 0, .5
+    on_tab_switch: root.on_tab_switch(*args)
+
+<CustomButton@ButtonBehavior+BoxLayout>:
+    image_source: ''
+    button_text: ''
+    button_description: ''
+    orientation: 'vertical'
+    canvas.before:
+        Color:
+            rgba: (0.9, 0.9, 0.9, 1) if app.theme_cls.theme_style == 'Dark' else (0.2, 0.2, 0.2, 1)
+        RoundedRectangle:
+            pos: self.pos
+            size: self.size
+            radius: [10]
+    BoxLayout:
+        orientation: 'vertical'
+        padding: [dp(10), dp(20), dp(10), dp(20)]
+        Image:
+            source: root.image_source
+            size_hint: None, None
+            size: dp(80), dp(80)
+            pos_hint: {'center_x': .5} 
+        Label:
+            text: root.button_text
+            font_size: '18sp'
+            color: (1, 1, 1, 1) if app.theme_cls.theme_style == 'Light' else (0.2, 0.2, 0.2, 1)
+            size_hint_y: None
+            height: dp(30)
+            pos_hint: {'center_x': 0.5}
+        Label:
+            text: root.button_description
+            font_size: '14sp'
+            color: (0.9, 0.9, 0.9, 1) if app.theme_cls.theme_style == 'Light' else (0.3, 0.3, 0.3, 1)
+            size_hint_y: None
+            height: dp(60)
+            text_size: self.width - dp(20), None
+            halign: 'center'
+            valign: 'middle'
+            multiline: True
+            pos_hint: {'center_x': 0.5}
+
+<ButtonAdministracion>:
+    cols: 8
+    GridLayout:
+        cols: root.cols
+        size_hint_y: None
+        height: self.minimum_height
+        on_width:
+            self.row_default_height = self.width / self.cols
+        row_force_default: True
+        spacing: dp(10)
+        padding: dp(10)
+        CustomButton:
+            image_source: 'logopng2.png'
+            button_text: 'Empleados'
+            button_description: 'Administrar/añadir empleados'
+            on_release: root.on_button_press(self.button_text)
+        CustomButton:
+            image_source: 'logopng2.png'
+            button_text: 'Botón 2'
+        CustomButton:
+            image_source: 'logopng2.png'
+            button_text: 'Botón 3'
+        CustomButton:
+            image_source: 'logopng2.png'
+            button_text: 'Botón 4'
+        CustomButton:
+            image_source: 'logopng2.png'
+            button_text: 'Botón 5'
+        CustomButton:
+            image_source: 'logopng2.png'
+            button_text: 'Botón 6'
+        CustomButton:
+            image_source: 'logopng2.png'
+            button_text: 'Botón 7'
+        CustomButton:
+            image_source: 'logopng2.png'
+            button_text: 'Botón 8'
+        CustomButton:
+            image_source: 'logopng2.png'
+            button_text: 'Botón 9'
+
+<ButtonProducion>:
+    cols: 8
+    GridLayout:
+        cols: root.cols
+        size_hint_y: None
+        height: self.minimum_height
+        on_width:
+            self.row_default_height = self.width / self.cols
+        row_force_default: True
+        spacing: dp(10)
+        padding: dp(10)
+        CustomButton:
+            image_source: 'logopng2.png'
+            button_text: 'Ordenes'
+            button_description: 'Organizar y cargar ordenes por empleado'
+            on_release: root.on_button_press(self.button_text)
+        CustomButton:
+            image_source: 'logopng2.png'
+            button_text: 'Botón 2'
+        CustomButton:
+            image_source: 'logopng2.png'
+            button_text: 'Botón 3'
+        CustomButton:
+            image_source: 'logopng2.png'
+            button_text: 'Botón 4'
+        CustomButton:
+            image_source: 'logopng2.png'
+            button_text: 'Botón 5'
+        CustomButton:
+            image_source: 'logopng2.png'
+            button_text: 'Botón 6'
+        CustomButton:
+            image_source: 'logopng2.png'
+            button_text: 'Botón 7'
+        CustomButton:
+            image_source: 'logopng2.png'
+            button_text: 'Botón 8'
+        CustomButton:
+            image_source: 'logopng2.png'
+            button_text: 'Botón 9'
+
+<ButtonLaboratorio>:
+    cols: 8
+    GridLayout:
+        cols: root.cols
+        size_hint_y: None
+        height: self.minimum_height
+        on_width:
+            self.row_default_height = self.width / self.cols
+        row_force_default: True
+        spacing: dp(10)
+        padding: dp(10)
+        CustomButton:
+            image_source: 'logopng2.png'
+            button_text: 'Informes de calidad'
+        CustomButton:
+            image_source: 'logopng2.png'
+            button_text: 'Botón 2'
+        CustomButton:
+            image_source: 'logopng2.png'
+            button_text: 'Botón 3'
+        CustomButton:
+            image_source: 'logopng2.png'
+            button_text: 'Botón 4'
+        CustomButton:
+            image_source: 'logopng2.png'
+            button_text: 'Botón 5'
+        CustomButton:
+            image_source: 'logopng2.png'
+            button_text: 'Botón 6'
+        CustomButton:
+            image_source: 'logopng2.png'
+            button_text: 'Botón 7'
+        CustomButton:
+            image_source: 'logopng2.png'
+            button_text: 'Botón 8'
+        CustomButton:
+            image_source: 'logopng2.png'
+            button_text: 'Botón 9'
+
+<ButtonOtros>:
+    cols: 8
+    GridLayout:
+        cols: root.cols
+        size_hint_y: None
+        height: self.minimum_height
+        on_width:
+            self.row_default_height = self.width / self.cols
+        row_force_default: True
+        spacing: dp(10)
+        padding: dp(10)
+        CustomButton:
+            image_source: 'logopng2.png'
+            button_text: 'Crear acceso a la app'
+        CustomButton:
+            image_source: 'logopng2.png'
+            button_text: 'Botón 2'
+        CustomButton:
+            image_source: 'logopng2.png'
+            button_text: 'Botón 3'
+        CustomButton:
+            image_source: 'logopng2.png'
+            button_text: 'Botón 4'
+        CustomButton:
+            image_source: 'logopng2.png'
+            button_text: 'Botón 5'
+        CustomButton:
+            image_source: 'logopng2.png'
+            button_text: 'Botón 6'
+        CustomButton:
+            image_source: 'logopng2.png'
+            button_text: 'Botón 7'
+        CustomButton:
+            image_source: 'logopng2.png'
+            button_text: 'Botón 8'
+        CustomButton:
+            image_source: 'logopng2.png'
+            button_text: 'Botón 9'
+
+<DesktopHome>:
+    MDScreen:
+        MDScreenManager:
+            id: screen_manager
+            MDScreen:
+                name: "pantalla principal"
+                MDBoxLayout:
+                    orientation: 'vertical'
+                    BarraTop:
+                        left_action_items: [["menu", lambda x: app.get_running_app().nav_controller.open_drawer("home_desktop")]]
+                    ConfigTabs:
+                        Tab:
+                            title: "Administración"
+                            icon: "file-document"
+                            ButtonAdministracion:
+                        Tab:
+                            title: "Producción"
+                            icon: "factory"
+                            ButtonProducion:
+                        Tab:
+                            title: "Laboratorio"
+                            icon: "atom"
+                            ButtonLaboratorio:
+                        Tab:
+                            title: "Otros"
+                            icon: "infinity"
+                            ButtonOtros:
+        BaseNavigationDrawer:
+            id: home_desktop
+            on_kv_post: app.nav_controller.set_drawer(self, "home_desktop")
+
+<TabletHome>:
+    MDScreen:
+        MDScreenManager:
+            id: screen_manager
+            MDScreen:
+                name: "pantalla principal"
+                MDBoxLayout:
+                    orientation: 'vertical'
+                    BarraTop:
+                        left_action_items: [["menu", lambda x: app.get_running_app().nav_controller.open_drawer("home_tablet")]]
+                    ConfigTabs:
+                        Tab:
+                            title: "Administración"
+                            icon: "file-document"
+                            ButtonAdministracion:
+                                cols: 4
+                        Tab:
+                            title: "Producción"
+                            icon: "factory"
+                            ButtonProducion:
+                                cols: 4
+                        Tab:
+                            title: "Laboratorio"
+                            icon: "atom"
+                            ButtonLaboratorio:
+                                cols:4
+                        Tab:
+                            title: "Otros"
+                            icon: "infinity"
+                            ButtonOtros:
+                                cols: 4
+        BaseNavigationDrawer:
+            id: home_tablet
+            on_kv_post: app.nav_controller.set_drawer(self, "home_tablet")
+
+
+<MobileHome>:
+    MDScreen:
+        MDScreenManager:
+            id: screen_manager
+            MDScreen:
+                name: "pantalla principal"
+                MDBoxLayout:
+                    orientation: 'vertical'
+                    BarraTop:
+                        left_action_items: [["menu", lambda x: app.get_running_app().nav_controller.open_drawer("home_mobile")]]
+                    ConfigTabs:
+                        Tab:
+                            title: "Administración"
+                            icon: "file-document"
+                            ButtonAdministracion:
+                                cols: 2
+                        Tab:
+                            title: "Producción"
+                            icon: "factory"
+                            ButtonProducion:
+                                cols:2
+                        Tab:
+                            title: "Laboratorio"
+                            icon: "atom"
+                            ButtonLaboratorio:
+                                cols:2
+                        Tab:
+                            title: "Otros"
+                            icon: "infinity"
+                            ButtonOtros:
+                                cols: 2
+        BaseNavigationDrawer:
+            id: home_mobile
+            on_kv_post: app.nav_controller.set_drawer(self, "home_mobile")
+
+<Home>:
+    ResponsiveHome:

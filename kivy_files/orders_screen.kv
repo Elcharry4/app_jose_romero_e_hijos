@@ -1,0 +1,48 @@
+<OrdersScreen>:
+    BoxLayout:
+        orientation: 'vertical'
+        BarraTop:
+            title: "Órdenes"
+            left_action_items: [["menu", lambda x: app.get_running_app().nav_controller.open_drawer("orders_drawer")]]
+        MDTextField:
+            id: search_field
+            hint_text: "Buscar empleado..."
+            size_hint: (0.8, None)
+            height: dp(40)
+            pos_hint: {"center_x": 0.5}
+            on_text: root.on_search(self.text)
+        BoxLayout:
+            orientation: 'horizontal'
+            padding: 10
+            size_hint_y: None
+            height: dp(40)
+            MDLabel:
+                text: "Empleado"
+                size_hint_x: 0.25
+            MDLabel:
+                text: "Tarea en Progreso"
+                size_hint_x: 0.25
+            MDLabel:
+                text: "Cantidad"
+                size_hint_x: 0.25
+            MDLabel:
+                text: "Hora de Inicio"
+                size_hint_x: 0.25
+        ScrollView:
+            BoxLayout:
+                id: employee_list_layout
+                orientation: 'vertical'
+                padding: 10
+                spacing: 10
+                size_hint_y: None
+                height: self.minimum_height
+        MDSpinner:
+            id: spinner
+            size_hint: None, None
+            size: dp(46), dp(46)
+            pos_hint: {'center_x': .5, 'center_y': .5}
+            active: False
+    BaseNavigationDrawer:
+        id: orders_drawer
+        on_kv_post: app.nav_controller.set_drawer(self, "orders_drawer")
+

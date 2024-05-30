@@ -1,0 +1,118 @@
+<BaseNavigationDrawer@MDNavigationLayout>:
+    MDNavigationDrawer:
+        id: nav_drawer
+        width: '308dp'
+        radius: (0, 16, 16, 0)
+        BoxLayout:
+            orientation: 'vertical'
+            MDNavigationDrawerMenu:
+                MDNavigationDrawerHeader:
+                    title: "Bienvenido"
+                    text: "@user"
+                    source: "logopng2.png"
+                    spacing: "4dp"
+                    padding: "12dp", 0, 0, "46dp"
+                DrawerClickableItem:
+                    icon: "home"
+                    text: "Página Principal"
+                    on_press: app.nav_controller.go_to_screen("home")
+                DrawerClickableItem:
+                    icon: "cog"
+                    text: "Configuración"
+                    on_press: app.nav_controller.go_to_screen("config")
+                DrawerClickableItem:
+                    icon: "logout"
+                    text: "Cerrar sesión"
+                    on_press: app.logout()
+
+<EmployeeTable>:
+    Widget:
+    MDIconButton:
+        id: update_button
+        icon: "reload"
+        pos_hint: {'center_x': 0.05, 'y': 0}
+        on_release: root.fetch_data()
+    MDIconButton:
+        id: add_employee_button
+        icon: "account-plus"
+        pos_hint: {'center_x': 0.1, 'y': 0}
+        on_release: root.show_add_employee_form()
+    MDIconButton:
+        id: delete_employee_button
+        icon: "delete"
+        pos_hint: {'center_x': 0.15, 'y': 0}
+        on_release: root.delete_selected_employees()
+
+<AddEmployeeForm>:
+    size_hint: (1, None)
+    height: "320dp"
+    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+    MDCard:
+        orientation: "vertical"
+        size_hint: None, None
+        size: "280dp", "320dp"
+        pos_hint: {"center_x": 0.5, "center_y": 0.5}
+        spacing: "10dp"
+        padding: "20dp"
+
+        MDLabel:
+            text: "Añadir Empleado"
+            theme_text_color: "Secondary"
+            size_hint_y: None
+            height: self.texture_size[1]
+
+        MDTextField:
+            id: name
+            hint_text: "Nombre"
+
+        MDTextField:
+            id: lastname
+            hint_text: "Apellido"
+
+        MDTextField:
+            id: position
+            hint_text: "Puesto"
+
+        MDRaisedButton:
+            text: "Agregar"
+            pos_hint: {"center_x": 0.5}
+            on_release: app.EmployeeTable.add_employee(name.text, lastname.text, position.text)
+
+<MobileEmpleado>:
+    MDScreen:
+        MDBoxLayout:
+            orientation: 'vertical'
+            BarraTop:
+                title: "Empleados"
+                left_action_items: [["menu", lambda x: app.get_running_app().nav_controller.open_drawer("mobile_drawer")]]
+            EmployeeTable:
+        BaseNavigationDrawer:
+            id: mobile_drawer
+            on_kv_post: app.nav_controller.set_drawer(self, "mobile_drawer")
+
+<TabletEmpleado>:
+    MDScreen:
+        MDBoxLayout:
+            orientation: 'vertical'
+            BarraTop:
+                title: "Empleados"
+                left_action_items: [["menu", lambda x: app.get_running_app().nav_controller.open_drawer("tablet_drawer")]]
+            EmployeeTable:
+        BaseNavigationDrawer:
+            id: tablet_drawer
+            on_kv_post: app.nav_controller.set_drawer(self, "tablet_drawer")
+
+<DesktopEmpleado>:
+    MDScreen:
+        MDBoxLayout:
+            orientation: 'vertical'
+            BarraTop:
+                title: "Empleados"
+                left_action_items: [["menu", lambda x: app.get_running_app().nav_controller.open_drawer("desktop_drawer")]]
+            EmployeeTable:
+        BaseNavigationDrawer:
+            id: desktop_drawer
+            on_kv_post: app.nav_controller.set_drawer(self, "desktop_drawer")
+
+<Empleados>:
+    ResponsiveEmpleado:

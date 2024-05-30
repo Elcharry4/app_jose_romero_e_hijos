@@ -1,0 +1,51 @@
+<ActivitySelectionScreen>:
+    BoxLayout:
+        orientation: 'vertical'
+        BarraTop:
+            id: toolbar
+            title: "Seleccionar actividad para"
+            left_action_items: [["arrow-left", lambda x: app.nav_controller.go_to_screen('employee_details', 'right')]]
+        MDBoxLayout:
+            size_hint_y: None
+            height: dp(56)
+            padding: dp(10)
+            spacing: dp(10)
+            MDDropDownItem:
+                id: activity_type_selector
+                text: "Moldeador"
+                on_release: root.open_menu()
+            MDRaisedButton:
+                id: add_task_button
+                text: "Agregar tarea"
+                size_hint_x: 0.2
+                pos_hint: {"center_x": 0.5}
+                opacity: 0
+                disabled: True
+                on_release: root.show_add_task_dialog()
+        MDBoxLayout:
+            size_hint_y: None
+            height: dp(56)
+            padding: dp(10)
+            spacing: dp(10)
+            MDTextField:
+                id: search_field
+                hint_text: "Buscar actividad"
+                size_hint_x: 0.8
+                pos_hint: {"center_x": 0.5}
+                on_text: root.filter_activities(self.text)
+        RecycleView:
+            id: rv
+            viewclass: 'OneLineListItem'
+            RecycleBoxLayout:
+                default_size: None, dp(56)
+                default_size_hint: 1, None
+                size_hint_y: None
+                height: self.minimum_height
+                orientation: 'vertical'
+                spacing: dp(2)
+        MDSpinner:
+            id: spinner
+            size_hint: None, None
+            size: dp(46), dp(46)
+            pos_hint: {'center_x': .5, 'center_y': .5}
+            active: False

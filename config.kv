@@ -1,0 +1,15 @@
+<ConfigScreen>:
+    MDScreen:
+        name: "pantalla de configuracion"
+        MDBoxLayout:
+            orientation: 'vertical'
+            BarraTop:
+                title: "Empleados"
+                left_action_items: [["menu", lambda x: app.get_running_app().nav_controller.open_drawer("config_drawer")]]
+            MDLabel:
+                text: "Toda la config"
+                halign: "center"
+
+        BaseNavigationDrawer:
+            id: config_drawer
+            on_kv_post: app.nav_controller.set_drawer(self, "config_drawer")

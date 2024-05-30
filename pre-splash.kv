@@ -1,0 +1,38 @@
+<SplashScreen>
+    MDScreen:
+        name: "pre-splash"
+        MDRelativeLayout:
+
+            MDIconButton:
+                icon: "theme-light-dark"
+                size_hint: None, None
+                pos_hint: {"center_x": 0.97, "bot": 0.99}
+                on_release: app.switch_theme_style()
+
+            Image:
+                source: "logopng2.png"
+                size_hint: None, None
+                size: "100dp", "100dp"
+                pos_hint: {"center_x": 0.5, "center_y": 0.6}
+
+            MDLabel:
+                text: "JOSE ROMERO E HIJOS SRL"
+                halign: "center" 
+                valign: "center" 
+                size_hint: None, None
+                width: "385dp" 
+                height: "32dp" 
+                pos_hint: {"center_x": 0.5, "center_y": 0.43}
+                font_size: "32dp"
+                font_name: "Poppins-SemiBold.ttf"
+
+            MDLabel:
+                text: "Fundicion de hierro nodular/gris"
+                halign: "center"
+                valign: "center"
+                size_hint: None, None
+                width: "250dp" 
+                height: "8dp"  
+                pos_hint: {"center_x": 0.5, "center_y": 0.35}
+                font_size: "8dp"
+                font_style: "Subtitle1"
