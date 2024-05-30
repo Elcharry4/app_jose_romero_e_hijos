@@ -12,6 +12,7 @@ from config import ConfigScreen
 from screens.orders_screen import OrdersScreen
 from screens.employee_details_screen import EmployeeDetailsScreen
 from screens.activity_selection_screen import ActivitySelectionScreen
+import os
 
 class ClickableTextFieldRound(MDRelativeLayout):
     text = StringProperty()
@@ -42,14 +43,18 @@ class MyApp(MDApp):
         self.theme_cls.theme_style_switch_animation = True
         self.theme_cls.theme_style = 'Dark'
 
-        Builder.load_file('pre-splash.kv')
-        Builder.load_file('login.kv')
-        Builder.load_file('home.kv')
-        Builder.load_file('config.kv')
-        Builder.load_file('empleados.kv')
-        Builder.load_file('kivy_files/orders_screen.kv')
-        Builder.load_file('kivy_files/employee_details_screen.kv')
-        Builder.load_file('kivy_files/activity_selection_screen.kv')
+        # Obtener el directorio actual
+        current_dir = os.path.dirname(os.path.abspath(__file__))
+
+        # Cargar archivos .kv con rutas relativas
+        Builder.load_file(os.path.join(current_dir, 'pre-splash.kv'))
+        Builder.load_file(os.path.join(current_dir, 'login.kv'))
+        Builder.load_file(os.path.join(current_dir, 'home.kv'))
+        Builder.load_file(os.path.join(current_dir, 'config.kv'))
+        Builder.load_file(os.path.join(current_dir, 'empleados.kv'))
+        Builder.load_file(os.path.join(current_dir, 'kivy_files', 'orders_screen.kv'))
+        Builder.load_file(os.path.join(current_dir, 'kivy_files', 'employee_details_screen.kv'))
+        Builder.load_file(os.path.join(current_dir, 'kivy_files', 'activity_selection_screen.kv'))
 
         self.manager = ScreenManager(transition=SlideTransition(direction='left'))
         self.nav_controller = NavigationController(self.manager)
