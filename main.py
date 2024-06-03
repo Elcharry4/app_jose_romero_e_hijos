@@ -13,6 +13,9 @@ from screens.orders_screen import OrdersScreen
 from screens.employee_details_screen import EmployeeDetailsScreen
 from screens.activity_selection_screen import ActivitySelectionScreen
 import os
+from kivymd.uix.screenmanager import *
+from kivy.core.text import LabelBase
+from kivy.resources import resource_add_path
 
 class ClickableTextFieldRound(MDRelativeLayout):
     text = StringProperty()
@@ -44,17 +47,19 @@ class MyApp(MDApp):
         self.theme_cls.theme_style = 'Dark'
 
         # Obtener el directorio actual
-        current_dir = os.path.dirname(os.path.abspath(__file__))
+        self.current_dir = os.path.dirname(os.path.abspath(__file__))
+        resource_add_path(self.current_dir)
+        LabelBase.register(name='Poppins', fn_regular=os.path.join(self.current_dir, 'sources', 'Poppins-SemiBold.ttf'))
 
         # Cargar archivos .kv con rutas relativas
-        Builder.load_file(os.path.join(current_dir, 'pre-splash.kv'))
-        Builder.load_file(os.path.join(current_dir, 'login.kv'))
-        Builder.load_file(os.path.join(current_dir, 'home.kv'))
-        Builder.load_file(os.path.join(current_dir, 'config.kv'))
-        Builder.load_file(os.path.join(current_dir, 'empleados.kv'))
-        Builder.load_file(os.path.join(current_dir, 'kivy_files', 'orders_screen.kv'))
-        Builder.load_file(os.path.join(current_dir, 'kivy_files', 'employee_details_screen.kv'))
-        Builder.load_file(os.path.join(current_dir, 'kivy_files', 'activity_selection_screen.kv'))
+        Builder.load_file(os.path.join(self.current_dir, 'pre-splash.kv'))
+        Builder.load_file(os.path.join(self.current_dir, 'login.kv'))
+        Builder.load_file(os.path.join(self.current_dir, 'home.kv'))
+        Builder.load_file(os.path.join(self.current_dir, 'config.kv'))
+        Builder.load_file(os.path.join(self.current_dir, 'empleados.kv'))
+        Builder.load_file(os.path.join(self.current_dir, 'kivy_files', 'orders_screen.kv'))
+        Builder.load_file(os.path.join(self.current_dir, 'kivy_files', 'employee_details_screen.kv'))
+        Builder.load_file(os.path.join(self.current_dir, 'kivy_files', 'activity_selection_screen.kv'))
 
         self.manager = ScreenManager(transition=SlideTransition(direction='left'))
         self.nav_controller = NavigationController(self.manager)
@@ -75,6 +80,9 @@ class MyApp(MDApp):
 
     def login(self, *args):
         self.manager.current = 'login'
+    
+    def get_image_path(self, filename):
+        return os.path.join(self.current_dir, 'sources', filename)
 
     def logout(self):
         self.manager.current = 'login'

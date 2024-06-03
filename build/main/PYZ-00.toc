@@ -1,0 +1,3 @@
+('C:\\Users\\lisan\\OneDrive\\Documentos\\Python '
+ 'proyects\\Fundicion\\App\\app_2\\build\\main\\PYZ-00.pyz',
+ [])
