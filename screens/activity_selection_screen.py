@@ -9,6 +9,7 @@ from kivy.lang import Builder
 import threading
 from database.db_manager import DBManager
 from kivymd.uix.textfield import MDTextField
+from functools import partial  # <-- Importar partial
 
 class ActivitySelectionScreen(MDScreen):
     selected_activity_type = StringProperty("Moldeador")
@@ -19,11 +20,12 @@ class ActivitySelectionScreen(MDScreen):
         self.employee_id = None
         self.db_manager = DBManager()
         self.activities = []
-        self.filtered_activities = []
+        self.filtered_activities = []  # Lista de actividades filtradas
         self.menu = None
         self.dialog = None
         self.task = None
         self.quantity_dialog = None
+        self.selected_activity_name = ""
         self.setup_menu()
 
     def on_enter(self):
@@ -55,35 +57,34 @@ class ActivitySelectionScreen(MDScreen):
 
     def _load_activities(self):
         self.activities = self.db_manager.get_activities_by_type(self.selected_activity_type)
+        self.filtered_activities = self.activities  # Inicialmente, todas las actividades son visibles
         Clock.schedule_once(lambda dt: self.display_activities(), 0)
         Clock.schedule_once(lambda dt: self.hide_loading(), 0)
 
     @mainthread
     def display_activities(self):
-        self.filtered_activities = self.activities  # Inicialmente, todas las actividades son visibles
-        self.ids.rv.data = [{'text': activity, 'on_release': lambda x=activity: self.select_activity(x)} for activity in self.activities]
+        self.ids.rv.data = [{'text': activity, 'on_release': partial(self.select_activity, activity)} for activity in self.filtered_activities]
 
     def filter_activities(self, text):
         text = text.lower()
         self.filtered_activities = [activity for activity in self.activities if text in activity.lower()]
-        self.ids.rv.data = [{'text': activity} for activity in self.filtered_activities]
+        self.display_activities()  # Actualizar la lista mostrada
 
-    def select_activity(self, activity_name):
-        selected_activity = next((activity for activity in self.filtered_activities if activity == activity_name), activity_name)
-
+    def select_activity(self, activity_name, *args):
+        self.selected_activity_name = activity_name
         if self.selected_activity_type == "Moldeador":
-            self.show_quantity_dialog(selected_activity)
+            self.show_quantity_dialog()
         else:
-            self.add_task(selected_activity, 1)  # Default quantity for non-Moldeador activities
+            self.add_task(1)  # Default quantity for non-Moldeador activities
 
-    def show_quantity_dialog(self, activity_name):
+    def show_quantity_dialog(self):
         self.quantity_dialog = MDDialog(
             title="Ingrese la cantidad de piezas",
             type="custom",
             content_cls=MDTextField(hint_text="Cantidad", input_filter="int", id="quantity_field"),
             buttons=[
                 MDFlatButton(text="Cancelar", on_release=self.close_quantity_dialog),
-                MDRaisedButton(text="Confirmar", on_release=lambda x: self.confirm_quantity(activity_name))
+                MDRaisedButton(text="Confirmar", on_release=self.confirm_quantity)
             ],
         )
         self.quantity_dialog.open()
@@ -92,16 +93,16 @@ class ActivitySelectionScreen(MDScreen):
         if self.quantity_dialog:
             self.quantity_dialog.dismiss()
 
-    def confirm_quantity(self, activity_name):
+    def confirm_quantity(self, *args):
         quantity_field = self.quantity_dialog.content_cls
         quantity = int(quantity_field.text) if quantity_field.text.isdigit() else 1
         self.close_quantity_dialog()
-        self.add_task(activity_name, quantity)
+        self.add_task(quantity)
 
-    def add_task(self, activity_name, quantity):
+    def add_task(self, quantity):
         app = MDApp.get_running_app()
         employee_details_screen = app.manager.get_screen('employee_details')
-        employee_details_screen.add_task(self.employee_id, activity_name, self.selected_activity_type, quantity)
+        employee_details_screen.add_task(self.employee_id, self.selected_activity_name, self.selected_activity_type, quantity)
         app.nav_controller.go_to_screen('employee_details', 'right')
 
     def show_loading(self):
