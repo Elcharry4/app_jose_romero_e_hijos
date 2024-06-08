@@ -12,12 +12,14 @@ from kivymd.uix.textfield import MDTextField
 
 class ActivitySelectionScreen(MDScreen):
     selected_activity_type = StringProperty("Moldeador")
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.employee_name = ""
         self.employee_id = None
         self.db_manager = DBManager()
         self.activities = []
+        self.filtered_activities = []
         self.menu = None
         self.dialog = None
         self.task = None
@@ -58,27 +60,30 @@ class ActivitySelectionScreen(MDScreen):
 
     @mainthread
     def display_activities(self):
+        self.filtered_activities = self.activities  # Inicialmente, todas las actividades son visibles
         self.ids.rv.data = [{'text': activity, 'on_release': lambda x=activity: self.select_activity(x)} for activity in self.activities]
 
     def filter_activities(self, text):
         text = text.lower()
-        filtered_activities = [activity for activity in self.activities if text in activity.lower()]
-        self.ids.rv.data = [{'text': activity} for activity in filtered_activities]
+        self.filtered_activities = [activity for activity in self.activities if text in activity.lower()]
+        self.ids.rv.data = [{'text': activity} for activity in self.filtered_activities]
 
     def select_activity(self, activity_name):
+        selected_activity = next((activity for activity in self.filtered_activities if activity == activity_name), activity_name)
+
         if self.selected_activity_type == "Moldeador":
-            self.show_quantity_dialog(activity_name)
+            self.show_quantity_dialog(selected_activity)
         else:
-            self.add_task(activity_name, 1)  # Default quantity for non-Moldeador activities
+            self.add_task(selected_activity, 1)  # Default quantity for non-Moldeador activities
 
     def show_quantity_dialog(self, activity_name):
         self.quantity_dialog = MDDialog(
-        title="Ingrese la cantidad de piezas",
-        type="custom",
-        content_cls=MDTextField(hint_text="Cantidad", input_filter="int", id="quantity_field"),
-        buttons=[
-            MDFlatButton(text="Cancelar", on_release=self.close_quantity_dialog),
-            MDRaisedButton(text="Confirmar", on_release=lambda x: self.confirm_quantity(activity_name))
+            title="Ingrese la cantidad de piezas",
+            type="custom",
+            content_cls=MDTextField(hint_text="Cantidad", input_filter="int", id="quantity_field"),
+            buttons=[
+                MDFlatButton(text="Cancelar", on_release=self.close_quantity_dialog),
+                MDRaisedButton(text="Confirmar", on_release=lambda x: self.confirm_quantity(activity_name))
             ],
         )
         self.quantity_dialog.open()
