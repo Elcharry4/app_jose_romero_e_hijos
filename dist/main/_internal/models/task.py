@@ -1,5 +1,5 @@
 class Task:
-    def __init__(self, task_id, name, activity_type, quantity, start_time=None, end_time=None, priority=None):
+    def __init__(self, task_id, name, activity_type, quantity, start_time=None, end_time=None, priority=None, total_time=None):
         self.task_id = task_id
         self.name = name
         self.activity_type = activity_type
@@ -7,3 +7,4 @@ class Task:
         self.start_time = start_time
         self.end_time = end_time
         self.priority = priority
+        self.total_time = total_time

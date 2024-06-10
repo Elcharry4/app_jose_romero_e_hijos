@@ -6,6 +6,9 @@ import threading
 from kivy.clock import Clock
 from datetime import datetime
 from kivymd.app import MDApp
+from kivymd.uix.dialog import MDDialog
+from kivymd.uix.textfield import MDTextField
+from kivymd.uix.button import MDFlatButton, MDRaisedButton
 
 class EmployeeDetailsScreen(MDScreen):
     def __init__(self, **kwargs):
@@ -35,14 +38,23 @@ class EmployeeDetailsScreen(MDScreen):
         if self.tasks:
             first_task = self.tasks[0]
             if first_task.priority == 1:
-                task_item = OneLineAvatarIconListItem(text=first_task.name)
+                task_text = first_task.name
+                if first_task.activity_type == "Moldeador":
+                    task_text += f" - Cantidad a moldear: {first_task.quantity}"
+                task_item = OneLineAvatarIconListItem(text=task_text)
                 check_icon = IconLeftWidget(icon="check")
-                check_icon.bind(on_release=lambda widget: self.mark_task_completed(first_task))
+                if first_task.activity_type == "Moldeador":
+                    check_icon.bind(on_release=lambda widget: self.show_real_quantity_dialog(first_task))
+                else:
+                    check_icon.bind(on_release=lambda widget: self.mark_task_completed(first_task))
                 task_item.add_widget(check_icon)
                 self.ids.task_list.add_widget(task_item)
 
             for task in self.tasks[1:]:
-                task_item = OneLineAvatarIconListItem(text=task.name)
+                task_text = task.name
+                if task.activity_type == "Moldeador":
+                    task_text += f" - Cantidad a moldear: {task.quantity}"
+                task_item = OneLineAvatarIconListItem(text=task_text)
                 task_item.add_widget(IconLeftWidget(icon="delete", on_release=lambda widget, t=task: self.delete_task(t)))
                 task_item.add_widget(IconRightWidget(icon="arrow-down", on_release=lambda widget, t=task: self.move_task_down(t)))
                 task_item.add_widget(IconRightWidget(icon="arrow-up", on_release=lambda widget, t=task: self.move_task_up(t)))
@@ -92,9 +104,12 @@ class EmployeeDetailsScreen(MDScreen):
             self.db_manager.update_task_start_time(self.tasks[idx2].task_id, datetime.now())
         self.load_tasks()
 
-    def mark_task_completed(self, task):
+    def mark_task_completed(self, task, real_quantity=None):
+        if real_quantity is None:
+            real_quantity = task.quantity  # Default to expected quantity if not provided
+
         self.db_manager.update_task_end_time(task.task_id, datetime.now())
-        self.db_manager.complete_task(task.task_id, self.employee_id)
+        self.db_manager.complete_task(task.task_id, self.employee_id, real_quantity)
         # Check if the next task (priority 2) should start and update its start time
         if len(self.tasks) > 1:
             self.db_manager.update_task_start_time(self.tasks[1].task_id, datetime.now())
@@ -116,3 +131,35 @@ class EmployeeDetailsScreen(MDScreen):
 
         # Navegar a la pantalla de órdenes
         app.nav_controller.go_to_screen('orders', 'right')
+    
+    def show_real_quantity_dialog(self, task):
+        self.real_quantity_dialog = MDDialog(
+            title=f"Finalizando la actividad {task.name}",
+            type="custom",
+            content_cls=MDTextField(hint_text="Cantidad real moldeada", input_filter="int", id="real_quantity_field"),
+            buttons=[
+                MDFlatButton(text="Cancelar", on_release=self.close_real_quantity_dialog),
+                MDRaisedButton(text="Aceptar", on_release=lambda x: self.confirm_real_quantity(task))
+            ],
+        )
+        self.real_quantity_dialog.open()
+
+    def close_real_quantity_dialog(self, *args):
+        if self.real_quantity_dialog:
+            self.real_quantity_dialog.dismiss()
+
+    def confirm_real_quantity(self, task):
+        quantity_field = self.real_quantity_dialog.content_cls
+        try:
+            real_quantity = int(quantity_field.text)
+        except ValueError:
+            real_quantity = task.quantity  # Use the expected quantity if the input is invalid
+
+        self.close_real_quantity_dialog()
+        self.mark_task_completed(task, real_quantity)
+
+    def go_to_history(self):
+        app = MDApp.get_running_app()
+        history_screen = app.manager.get_screen('history')
+        history_screen.update_employee_id(self.employee_id, self.employee_name)
+        app.nav_controller.go_to_screen('history', 'left')

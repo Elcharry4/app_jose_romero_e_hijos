@@ -3,23 +3,20 @@ from kivymd.app import MDApp
 from kivymd.uix.screen import MDScreen
 from kivy.lang import Builder
 from kivy.clock import Clock
-from kivymd.uix.relativelayout import MDRelativeLayout
-from kivy.properties import StringProperty
-from login import Login
-from home import Home
-from empleados import Empleados, DatabaseManager, EmployeeTable
-from config import ConfigScreen
+import os
+from screens.login_screen import LoginScreen
+from screens.home_screen import Home
+from screens.empleados_screen import Empleados
+from screens.config_screen import ConfigScreen
 from screens.orders_screen import OrdersScreen
 from screens.employee_details_screen import EmployeeDetailsScreen
 from screens.activity_selection_screen import ActivitySelectionScreen
-import os
-from kivymd.uix.screenmanager import *
+from screens.fundido_screen import FundidoScreen
+from screens.history_screen import HistoryScreen
 from kivy.core.text import LabelBase
 from kivy.resources import resource_add_path
-
-class ClickableTextFieldRound(MDRelativeLayout):
-    text = StringProperty()
-    hint_text = StringProperty()
+from database.db_manager import DBManager
+import threading
 
 class NavigationController:
     def __init__(self, screen_manager):
@@ -39,7 +36,13 @@ class NavigationController:
         self.screen_manager.current = screen_name
 
 class SplashScreen(MDScreen):
-    pass
+    def on_enter(self):
+        threading.Thread(target=DBManager.initialize_pool, daemon=True).start()
+        Clock.schedule_once(self.switch_to_login, 5)
+
+    def switch_to_login(self, *args):
+        app = MDApp.get_running_app()
+        app.nav_controller.go_to_screen('login')
 
 class MyApp(MDApp):
     def build(self):
@@ -51,35 +54,42 @@ class MyApp(MDApp):
         resource_add_path(self.current_dir)
         LabelBase.register(name='Poppins', fn_regular=os.path.join(self.current_dir, 'sources', 'Poppins-SemiBold.ttf'))
 
-        # Cargar archivos .kv con rutas relativas
-        Builder.load_file(os.path.join(self.current_dir, 'pre-splash.kv'))
-        Builder.load_file(os.path.join(self.current_dir, 'login.kv'))
-        Builder.load_file(os.path.join(self.current_dir, 'home.kv'))
-        Builder.load_file(os.path.join(self.current_dir, 'config.kv'))
-        Builder.load_file(os.path.join(self.current_dir, 'empleados.kv'))
-        Builder.load_file(os.path.join(self.current_dir, 'kivy_files', 'orders_screen.kv'))
-        Builder.load_file(os.path.join(self.current_dir, 'kivy_files', 'employee_details_screen.kv'))
-        Builder.load_file(os.path.join(self.current_dir, 'kivy_files', 'activity_selection_screen.kv'))
+        # Cargar el archivo .kv principal
+        Builder.load_file(os.path.join(self.current_dir, 'kivy_files', 'pre_splash_screen.kv'))
+        Builder.load_file(os.path.join(self.current_dir, 'kivy_files', 'login_screen.kv'))
 
         self.manager = ScreenManager(transition=SlideTransition(direction='left'))
         self.nav_controller = NavigationController(self.manager)
-        self.DatabaseManager = DatabaseManager()
-        self.EmployeeTable = EmployeeTable()
         self.manager.add_widget(SplashScreen(name='pre-splash'))
-        self.manager.add_widget(Login(name='login'))
+        self.manager.add_widget(LoginScreen(name='login'))
+
+        return self.manager
+
+    def on_start(self):
+        Clock.schedule_once(self.go_to_splash, 0)
+        Clock.schedule_once(self.load_other_screens, 0.1)
+
+    def load_other_screens(self, dt):
+        Builder.load_file(os.path.join(self.current_dir, 'kivy_files', 'home_screen.kv'))
+        Builder.load_file(os.path.join(self.current_dir, 'kivy_files', 'config_screen.kv'))
+        Builder.load_file(os.path.join(self.current_dir, 'kivy_files', 'empleados_screen.kv'))
+        Builder.load_file(os.path.join(self.current_dir, 'kivy_files', 'orders_screen.kv'))
+        Builder.load_file(os.path.join(self.current_dir, 'kivy_files', 'employee_details_screen.kv'))
+        Builder.load_file(os.path.join(self.current_dir, 'kivy_files', 'activity_selection_screen.kv'))
+        Builder.load_file(os.path.join(self.current_dir, 'kivy_files', 'fundido_screen.kv'))
+        Builder.load_file(os.path.join(self.current_dir, 'kivy_files', 'history_screen.kv'))
+
         self.manager.add_widget(Home(name='home'))
         self.manager.add_widget(ConfigScreen(name='config'))
         self.manager.add_widget(Empleados(name='empleados'))
         self.manager.add_widget(OrdersScreen(name='orders'))
         self.manager.add_widget(EmployeeDetailsScreen(name='employee_details'))
         self.manager.add_widget(ActivitySelectionScreen(name='activity_selection'))
-        return self.manager
+        self.manager.add_widget(FundidoScreen(name='fundido'))
+        self.manager.add_widget(HistoryScreen(name='history'))
 
-    def on_start(self):
-        Clock.schedule_once(self.login, 3)
-
-    def login(self, *args):
-        self.manager.current = 'login'
+    def go_to_splash(self, *args):
+        self.manager.current = 'pre-splash'
     
     def get_image_path(self, filename):
         return os.path.join(self.current_dir, 'sources', filename)

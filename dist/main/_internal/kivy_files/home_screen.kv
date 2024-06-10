@@ -5,7 +5,7 @@
 <BarraTop@MDTopAppBar>:
     right_action_items: [["bell"]]
     title: "JOSE ROMERO E HIJOS SRL"
-    elevation: 10
+    elevation: 1
     pos_hint: {"top": 1}
 
 <ConfigTabs@MDTabs>
@@ -68,7 +68,7 @@
         spacing: dp(10)
         padding: dp(10)
         CustomButton:
-            image_source: app.get_running_app().get_image_path("logopng2.png")
+            image_source: app.get_running_app().get_image_path("empleados.png")
             button_text: 'Empleados'
             button_description: 'Administrar/añadir empleados'
             on_release: root.on_button_press(self.button_text)
@@ -85,9 +85,14 @@
         spacing: dp(10)
         padding: dp(10)
         CustomButton:
-            image_source: app.get_running_app().get_image_path("logopng2.png")
+            image_source: app.get_running_app().get_image_path("ordenes.png")
             button_text: 'Ordenes'
             button_description: 'Organizar y cargar ordenes por empleado'
+            on_release: root.on_button_press(self.button_text)
+        CustomButton:
+            image_source: app.get_running_app().get_image_path("fundicion.png")
+            button_text: 'Fundido'
+            button_description: 'Informar tiempo y quienes fundieron en la ultima colada'
             on_release: root.on_button_press(self.button_text)
 
 <ButtonLaboratorio>:

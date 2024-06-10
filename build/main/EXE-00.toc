@@ -62,6 +62,10 @@
    'C:\\Users\\lisan\\OneDrive\\Documentos\\Python '
    'proyects\\Fundicion\\App\\app_2\\myenv\\Lib\\site-packages\\PyInstaller\\loader\\pyiboot01_bootstrap.py',
    'PYSOURCE'),
+  ('pyi_rth_kivy',
+   'C:\\Users\\lisan\\OneDrive\\Documentos\\Python '
+   'proyects\\Fundicion\\App\\app_2\\myenv\\Lib\\site-packages\\PyInstaller\\hooks\\rthooks\\pyi_rth_kivy.py',
+   'PYSOURCE'),
   ('pyi_rth_inspect',
    'C:\\Users\\lisan\\OneDrive\\Documentos\\Python '
    'proyects\\Fundicion\\App\\app_2\\myenv\\Lib\\site-packages\\PyInstaller\\hooks\\rthooks\\pyi_rth_inspect.py',
@@ -69,6 +73,10 @@
   ('pyi_rth_pkgres',
    'C:\\Users\\lisan\\OneDrive\\Documentos\\Python '
    'proyects\\Fundicion\\App\\app_2\\myenv\\Lib\\site-packages\\PyInstaller\\hooks\\rthooks\\pyi_rth_pkgres.py',
+   'PYSOURCE'),
+  ('pyi_rth_multiprocessing',
+   'C:\\Users\\lisan\\OneDrive\\Documentos\\Python '
+   'proyects\\Fundicion\\App\\app_2\\myenv\\Lib\\site-packages\\PyInstaller\\hooks\\rthooks\\pyi_rth_multiprocessing.py',
    'PYSOURCE'),
   ('pyi_rth_pkgutil',
    'C:\\Users\\lisan\\OneDrive\\Documentos\\Python '
@@ -78,14 +86,6 @@
    'C:\\Users\\lisan\\OneDrive\\Documentos\\Python '
    'proyects\\Fundicion\\App\\app_2\\myenv\\Lib\\site-packages\\PyInstaller\\hooks\\rthooks\\pyi_rth_gstreamer.py',
    'PYSOURCE'),
-  ('pyi_rth_kivy',
-   'C:\\Users\\lisan\\OneDrive\\Documentos\\Python '
-   'proyects\\Fundicion\\App\\app_2\\myenv\\Lib\\site-packages\\PyInstaller\\hooks\\rthooks\\pyi_rth_kivy.py',
-   'PYSOURCE'),
-  ('pyi_rth_multiprocessing',
-   'C:\\Users\\lisan\\OneDrive\\Documentos\\Python '
-   'proyects\\Fundicion\\App\\app_2\\myenv\\Lib\\site-packages\\PyInstaller\\hooks\\rthooks\\pyi_rth_multiprocessing.py',
-   'PYSOURCE'),
   ('main',
    'C:\\Users\\lisan\\OneDrive\\Documentos\\Python '
    'proyects\\Fundicion\\App\\app_2\\main.py',
@@ -93,7 +93,7 @@
  [],
  False,
  False,
- 1717125621,
+ 1717992956,
  [('runw.exe',
    'C:\\Users\\lisan\\OneDrive\\Documentos\\Python '
    'proyects\\Fundicion\\App\\app_2\\myenv\\Lib\\site-packages\\PyInstaller\\bootloader\\Windows-64bit-intel\\runw.exe',

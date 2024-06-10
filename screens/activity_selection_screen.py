@@ -9,7 +9,7 @@ from kivy.lang import Builder
 import threading
 from database.db_manager import DBManager
 from kivymd.uix.textfield import MDTextField
-from functools import partial  # <-- Importar partial
+from functools import partial
 
 class ActivitySelectionScreen(MDScreen):
     selected_activity_type = StringProperty("Moldeador")
@@ -72,6 +72,7 @@ class ActivitySelectionScreen(MDScreen):
 
     def select_activity(self, activity_name, *args):
         self.selected_activity_name = activity_name
+        self.ids.search_field.text = ""
         if self.selected_activity_type == "Moldeador":
             self.show_quantity_dialog()
         else:

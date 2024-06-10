@@ -17,6 +17,9 @@ class ButtonProducion(ScrollView):
         app = App.get_running_app()
         if button_text == "Ordenes":
             app.manager.current = 'orders'
+        if button_text == "Fundido":
+            app.manager.current = 'fundido'
+
 class ButtonLaboratorio(ScrollView):
     pass
 class ButtonOtros(ScrollView):

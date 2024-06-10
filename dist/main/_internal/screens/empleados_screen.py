@@ -4,18 +4,16 @@ from kivymd.uix.datatables import MDDataTable
 from kivy.metrics import dp
 from kivy.clock import Clock
 from kivymd.uix.floatlayout import MDFloatLayout
-import configparser
-import mysql.connector
-import os
 import threading
 from kivymd.uix.dialog import MDDialog
 from kivymd.uix.button import MDFlatButton
 from kivy.properties import StringProperty
+from database.db_manager import DBManager  # Cambiado a DBManager
 
 class EmployeeTable(MDScreen):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.db_manager = DatabaseManager()
+        self.db_manager = DBManager()  # Cambiado a DBManager
         self.loading_data = False
         self.layout = MDFloatLayout(size_hint=(1, 1))
         self.selected_rows = []
@@ -50,7 +48,7 @@ class EmployeeTable(MDScreen):
 
     def _fetch_data(self):
         try:
-            result = self.db_manager.fetch_employees()
+            result = self.db_manager.fech_employees()
             Clock.schedule_once(lambda dt: self.update_table(result))
         except Exception as e:
             print(f"Error al recuperar datos: {e}")
@@ -119,11 +117,11 @@ class EmployeeTable(MDScreen):
         self.current_dialog.open()
 
     def perform_delete(self, employee_id):
-        success = self.db_manager.delete_employee(employee_id)
+        success = self.db_manager.delete_employee(employee_id)  # Usar delete_employee
         Clock.schedule_once(lambda dt: self.show_result(success, "Empleado eliminado correctamente."))
 
     def perform_add(self, name, lastname, position):
-        success = self.db_manager.add_employee(name, lastname, position)
+        success = self.db_manager.add_employee(name, lastname, position)  # Usar add_employee
         Clock.schedule_once(lambda dt: self.show_result(success, "Empleado agregado correctamente."))
 
     def show_result(self, success, message):
@@ -173,57 +171,3 @@ class ResponsiveEmpleado(MDResponsiveLayout, MDScreen):
 
 class Empleados(MDScreen):
     pass
-
-class DatabaseManager:
-    def __init__(self):
-        self.config = configparser.ConfigParser()
-        self.config_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'config.ini')
-        self.config.read(self.config_path)
-
-    def get_connection(self):
-        return mysql.connector.connect(
-            host=self.config['mysql']['host'],
-            user=self.config['mysql']['user'],
-            password=self.config['mysql']['password'],
-            database=self.config['mysql']['db']
-        )
-
-    def fetch_employees(self):
-        connection = self.get_connection()
-        try:
-            cursor = connection.cursor()
-            cursor.execute("SELECT id, nombre, apellido, seccion FROM empleados")
-            return cursor.fetchall()
-        finally:
-            if connection:
-                connection.close()
-
-    def add_employee(self, name, lastname, section):
-        connection = self.get_connection()
-        try:
-            cursor = connection.cursor()
-            sql = "INSERT INTO empleados (nombre, apellido, seccion) VALUES (%s, %s, %s)"
-            cursor.execute(sql, (name, lastname, section))
-            connection.commit()
-            return cursor.rowcount > 0
-        except mysql.connector.Error as err:
-            print("Error al agregar empleado:", err)
-            return False
-        finally:
-            if connection:
-                connection.close()
-
-    def delete_employee(self, employee_id):
-        connection = self.get_connection()
-        try:
-            cursor = connection.cursor()
-            cursor.execute("DELETE FROM empleados WHERE id = %s", (employee_id,))
-            rows_affected = cursor.rowcount
-            connection.commit()
-            return rows_affected > 0
-        except mysql.connector.Error as err:
-            print("Error al eliminar empleado:", err)
-            return False
-        finally:
-            if connection:
-                connection.close()

@@ -5,6 +5,7 @@
             id: toolbar
             title: "Actividades de"
             left_action_items: [["arrow-left", lambda x: app.root.get_screen('employee_details').go_back_to_orders()]]
+            right_action_items: [["history", lambda x: app.root.get_screen('employee_details').go_to_history()]]
         ScrollView:
             MDList:
                 id: task_list

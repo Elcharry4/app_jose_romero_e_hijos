@@ -1,0 +1,61 @@
+<HistoryScreen>:
+    BoxLayout:
+        orientation: 'vertical'
+        BarraTop:
+            id: toolbar
+            title: "Historial de"
+            left_action_items: [["arrow-left", lambda x: app.nav_controller.go_to_screen('employee_details', 'right')]]
+        MDTextField:
+            id: search_field
+            hint_text: "Buscar actividad..."
+            on_text: root.filter_history(self.text)
+            size_hint_y: None
+            height: dp(56)
+            pos_hint: {"center_x": 0.5}
+            mode: "rectangle"
+        ScrollView:
+            GridLayout:
+                id: history_list
+                cols: 2 
+                spacing: dp(10)
+                padding: dp(10)
+                size_hint_y: None
+                height: self.minimum_height
+                row_default_height: dp(124)
+        MDSpinner:
+            id: spinner
+            size_hint: None, None
+            size: dp(46), dp(46)
+            pos_hint: {'center_x': .5, 'center_y': .5}
+            active: False
+
+<HistoryItem>:
+    orientation: 'vertical'
+    size_hint: 1, 1
+    padding: dp(16)
+    spacing: dp(8)
+    MDLabel:
+        text: root.task_name
+        theme_text_color: "Primary"
+        bold: True
+        font_style: "H6"
+    MDLabel:
+        text: f"Cantidad: {root.quantity}"
+        theme_text_color: "Secondary"
+        font_style: "Body2"
+    MDLabel:
+        text: f"Tipo de Actividad: {root.activity_type}"
+        theme_text_color: "Secondary"
+        font_style: "Body2"
+    MDLabel:
+        text: f"Hora de Inicio: {root.start_time}"
+        theme_text_color: "Secondary"
+        font_style: "Body2"
+    MDLabel:
+        text: f"Hora de Fin: {root.end_time}"
+        theme_text_color: "Secondary"
+        font_style: "Body2"
+    MDLabel:
+        text: f"Tiempo Total (sin fundición): {root.total_time}"
+        theme_text_color: "Secondary"
+        font_style: "Body2"
